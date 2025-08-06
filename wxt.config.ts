@@ -7,7 +7,7 @@ console.log(path.resolve(__dirname, "./entrypoints"));
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    version: "1.0.0",
+    version: "1.1.0",
     name: "EasyApply",
     permissions: ['tabs', 'scripting', 'storage'],
     host_permissions: ['<all_urls>']
