@@ -12,7 +12,7 @@ function App() {
   return (
     <div className="px-5 pt-4 bg-white h-full">
       <div className="flex flex-col gap-4">
-        <Heading size="xl" title="EasyApply" subtitle="AI-powered cover letter generator" />
+        <Heading size="xl" title="EasyApply" subtitle="AI-powered applying tool" />
         <Tabs defaultValue="profiles" className="h-full">
           <TabsList className="w-full">
             <TabsTrigger value="profiles">Profiles</TabsTrigger>
