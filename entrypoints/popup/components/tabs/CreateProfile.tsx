@@ -123,13 +123,13 @@ const NOTICE_PERIODS = [
 const SKILLS = [
   // Frontend Frameworks
   { value: "react", label: "React.js" },
-  { value: "nextjs", label: "Next.js" },
+  { value: "next", label: "Next.js" },
   { value: "angular", label: "Angular.js" },
   { value: "vue", label: "Vue.js" },
   { value: "nuxt", label: "Nuxt.js" },
   { value: "svelte", label: "Svelte" },
   { value: "ember", label: "Ember.js" },
-  { value: "solidjs", label: "Solid.js" },
+  { value: "solid", label: "Solid.js" },
 
   // Styling / UI
   { value: "tailwind", label: "Tailwind CSS" },
@@ -137,6 +137,8 @@ const SKILLS = [
   { value: "material-ui", label: "Material UI" },
   { value: "chakra-ui", label: "Chakra UI" },
   { value: "scss", label: "SCSS / SASS" },
+  { value: "css", label: "CSS" },
+  { value: "html", label: "HTML" },
 
   // Backend Frameworks
   { value: "nodejs", label: "Node.js" },
@@ -329,6 +331,7 @@ type FormProfile = z.infer<typeof FormProfileSchema>;
 export const CreateProfile = () => {
   const { setActiveTab } = useTabContext();
   const [editProfile, setEditProfile] = useState<null | FormProfile>(null);
+  console.log(editProfile);
 
   useEffect(() => {
     browser.storage.local.get("editProfileId").then((data) => {
@@ -356,12 +359,7 @@ export const CreateProfile = () => {
   const form = useForm<FormProfile>({
     resolver: zodResolver(FormProfileSchema),
     mode: "onChange",
-    defaultValues: {
-      relocation: false,
-      location: {
-        remote: false
-      }
-    },
+    defaultValues: {},
   });
 
   const { reset } = form;
@@ -489,11 +487,32 @@ export const CreateProfile = () => {
               }
               return p;
             })
-          : [...prevProfiles, { id: uuidv4(), ...profile }],
+          : [
+              ...prevProfiles,
+              {
+                id: uuidv4(),
+                ...profile,
+                relocation: profile.relocation ?? false,
+                location: {
+                  ...profile.location,
+                  remote: profile.location.remote ?? false,
+                },
+              },
+            ],
       });
     } else {
       await browser.storage.local.set({
-        profiles: [{ id: uuidv4(), ...profile }],
+        profiles: [
+          {
+            id: uuidv4(),
+            ...profile,
+            relocation: profile.relocation ?? false,
+            location: {
+              ...profile.location,
+              remote: profile.location.remote ?? false,
+            },
+          },
+        ],
       });
     }
   }
@@ -724,12 +743,14 @@ export const CreateProfile = () => {
               <FormControl>
                 <MultiSelect
                   // TODO
+                  key={JSON.stringify(field.value)}
                   options={SKILLS}
                   onValueChange={field.onChange}
                   placeholder="Select skills"
                   variant="inverted"
                   animation={2}
                   maxCount={8}
+                  defaultValue={field.value}
                   {...field}
                 />
               </FormControl>
@@ -1425,7 +1446,7 @@ export const CreateProfile = () => {
                         {company || "Untitled position"}
                       </div>
                       <div>{position}</div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-muted-foreground line-clamp-6">
                         {description}
                       </div>
                       <div className="text-sm">
